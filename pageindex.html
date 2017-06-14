@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .pagelist span{
+            display:inline-block;
+            width:30px;
+            height:20px;
+            border:1px solid #cecece;
+            text-align:center;
+            line-height:20px;
+            margin:0 5px;
+            color:#555;
+            cursor:pointer;
+        }
+        .pagelist .prev,.pagelist .next{
+            width:70px;
+        }
+        .select{
+            background: #7dc1fc;
+            color:#fff;
+        }
+    </style>
+</head>
+<body ng-app="myapp">
+<div ng-controller="ck">
+    <div class="pagelist">
+        <span class="prev" ng-click="prev()">上一页</span>
+        <span ng-click="selectPage(1)" ng-class="{select:state==1}">1</span>
+        <span ng-if="!statt==false">…</span>
+        <span ng-repeat="i in pageList" ng-click="selectPage(i)" ng-class="{select:state==i}">{{i}}</span>
+        <span ng-if="!status==false">…</span>
+        <span ng-class="{select:state==17}" ng-click="selectPage(17)">17</span>
+        <span class="next" ng-click="next(state)">下一页</span>
+    </div>
+</div>
+<script src="angular.js"></script>
+<script>
+    const app=angular.module("myapp",[]);
+    app.controller("ck",function($scope){
+        $scope.num=5 ;
+        $scope.length=17;
+        $scope.state="";
+        $scope.selectPage = function (page){
+            $scope.state=page ;
+            change();
+        };
+        $scope.selectPage(1);
+        $scope.prev=function(){
+            if($scope.state==1)return;
+            $scope.state=$scope.state-1;
+            change();
+        };
+        $scope.next=function(){
+            if($scope.state==17)return;
+            $scope.state=$scope.state+1;
+            change()
+        };
+        function change(){
+            $scope.pageList=[];
+            if($scope.state<$scope.num){
+                for(let i=2;i<=$scope.num;i++){
+                    $scope.pageList.push(i)
+                }
+                $scope.statt=false;
+                $scope.status=true;
+            }
+            if($scope.state>=$scope.num &&$scope.state<$scope.length-2 ){
+                $scope.pageList.push($scope.state-2,$scope.state-1,$scope.state,$scope.state+1,$scope.state+2);
+                $scope.statt=true;
+                $scope.status=true;
+            }
+            if($scope.state>=$scope.length-2){
+                for(let i=$scope.length-1;i>$scope.length-5;i--){
+                    $scope.pageList.unshift(i)
+                }
+                $scope.statt=true ;
+                $scope.status=false;
+            }
+        }
+    })
+</script>
+</body>
+
+</html>
